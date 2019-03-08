@@ -6,10 +6,7 @@ import org.jsoup.nodes.Document;
 import javax.net.ssl.HttpsURLConnection;
 import javax.print.Doc;
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -34,9 +31,9 @@ public class DownHtml {
 
     public static void main(String[] args)
             throws IOException{
-        String url="https://baike.baidu.com/item/";
-        System.out.println(url+URLEncoder.encode("中国共产党重大事项请示报告条例","utf8")+"/23270043");
-        DownHtml.downLoad(url+URLEncoder.encode("中国共产党重大事项请示报告条例","utf8")+"/23270043");
+        String url="http://www.baike.com/wiki/%E9%99%88%E8%8B%B1%E4%BF%8A";
+        System.out.println(URLDecoder.decode(url,"utf8"));
+        //DownHtml.downLoad(url+URLEncoder.encode("中国共产党重大事项请示报告条例","utf8")+"/23270043");
         //"https://baike.baidu.com/item/%E4%B8%AD%E5%9B%BD%E5%85%B1%E4%BA%A7%E5%85%9A%E9%87%8D%E5%A4%A7%E4%BA%8B%E9%A1%B9%E8%AF%B7%E7%A4%BA%E6%8A%A5%E5%91%8A%E6%9D%A1%E4%BE%8B/23270043
 
     }

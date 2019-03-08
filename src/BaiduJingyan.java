@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 
 
-public class baiduJingyan {
+public class BaiduJingyan {
 
     public Document downLoad(String url,String ip,String port)
             throws Throwable {

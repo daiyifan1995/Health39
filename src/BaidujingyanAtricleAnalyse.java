@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class baidujingyanAtricleAnalyse {
+public class BaidujingyanAtricleAnalyse {
     public static void main(String[] args)
             throws IOException {
 ////        baiduJingyan J=new baiduJingyan();
@@ -22,7 +22,7 @@ public class baidujingyanAtricleAnalyse {
 //        Map<String,Object> result=A.analysehtml(filename);
 //        System.out.println(result);
 
-        baidujingyanAtricleAnalyse A = new baidujingyanAtricleAnalyse();
+        BaidujingyanAtricleAnalyse A = new BaidujingyanAtricleAnalyse();
 
         String dirname="baiduJingyanData\\article\\";
         File dir = new File(dirname);
@@ -43,7 +43,7 @@ public class baidujingyanAtricleAnalyse {
 
     public Map<String,Object> analysehtml(String filename)
             throws IOException{
-        baidujingyanAtricleAnalyse A = new baidujingyanAtricleAnalyse();
+        BaidujingyanAtricleAnalyse A = new BaidujingyanAtricleAnalyse();
 
         Map<String,Object> result=new HashMap<>();
 
@@ -192,9 +192,9 @@ public class baidujingyanAtricleAnalyse {
 
             String head=module.select("h2[class='exp-content-head']").text();
 
-            if(head.equals("")){
-                continue;
-            }
+//            if(head.equals("")){
+//                continue;
+//            }
 
             content.put("head",head);
 
@@ -202,7 +202,8 @@ public class baidujingyanAtricleAnalyse {
             Elements elements=module.select("li");
 
             List<Map<String,Object>> steps=new LinkedList<>();
-            if (elements.size()!=0){
+            if (head.equals("")){
+//            if (elements.size()!=0){
 
                 for(Element element :elements) {
 

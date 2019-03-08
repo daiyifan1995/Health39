@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class TestBaiduJingyan {
+public class BaiduJingyanCrawl {
 
     int changes=0;
     int period=0;
@@ -33,7 +33,7 @@ public class TestBaiduJingyan {
         HashSet<String> unurlcrawled=new HashSet<>();//发生了错误则放入未下载下来的
 
 
-        TestBaiduJingyan T=new TestBaiduJingyan();
+        BaiduJingyanCrawl T=new  BaiduJingyanCrawl();
 
         String ip=T.ips[0];
         String port=T.port[0];
@@ -43,7 +43,7 @@ public class TestBaiduJingyan {
         //T.startcrawl(urlcrawled,unurlcrawled,ip,port);//爬虫起始点
         T.writecrawl(urlcrawled,unurlcrawled);
 
-        baiduJingyan B=new baiduJingyan();
+        BaiduJingyan B=new BaiduJingyan();
 
         for(String filename:B.dirList("baiduJingyanData\\user")) {
             System.out.println("—————————————————————————————————");
@@ -83,7 +83,7 @@ public class TestBaiduJingyan {
     public void startcrawl(HashMap<String,Integer> urlcrawled,Set<String> unurlcrawled,String ip,String port)
             throws IOException{
         String base="https://jingyan.baidu.com/list/";
-        baiduJingyan b =new baiduJingyan();
+        BaiduJingyan b =new BaiduJingyan();
         for(int i=1;i<130;i++){
             String url=base+String.valueOf(i);
             try{
@@ -109,7 +109,7 @@ public class TestBaiduJingyan {
 
     public void toSet(Document doc,HashMap<String,Integer>  urlcrawled,HashSet<String>  unurlcrawled,String ip,String port)//把看到的url下载并存入urlcrawled
             throws IOException{
-        baiduJingyan B=new baiduJingyan();
+        BaiduJingyan B=new BaiduJingyan();
         Set<String> urllist=B.selecturl(doc);
         for(String url:urllist)
             //要保证该url未下载过
