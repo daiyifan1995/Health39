@@ -95,7 +95,7 @@ public class proxy {
             String port=map.get("port");
             System.out.println(map);
             try{
-                Document testDoc = DownHtml.downLoadTest("https://www.xicidaili.com/",ip,port);
+                Document testDoc = DownHtml.downLoadProxy("https://www.xicidaili.com/",ip,port);
                 if(testDoc.toString().length()>1000)
                 {
                     Ip.add(map);

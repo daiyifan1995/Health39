@@ -30,7 +30,9 @@ public class OpenHtml {
                     .replace(".com","")
                     .replace(".cn","")
                     .replace("www.","")
-                    .replace(".html","");
+                    .replace(".html","")
+                    .replace("?","/")
+                    .replace("=","_");
 
             String[] dirnames=filename.split("/");
 

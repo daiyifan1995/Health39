@@ -24,7 +24,7 @@ public class BaidujingyanAtricleAnalyse {
 
         BaidujingyanAtricleAnalyse A = new BaidujingyanAtricleAnalyse();
 
-        String dirname="baiduJingyanData\\article\\";
+        String dirname="C:\\Users\\daiyifan\\IdeaProjects\\Health39\\jingyan.baidu\\article\\";
         File dir = new File(dirname);
         String[] children = dir.list();
 
@@ -34,7 +34,7 @@ public class BaidujingyanAtricleAnalyse {
             Map<String, Object> result = A.analysehtml(filename);
             System.out.println(result);
 
-            writeresult.writetojson(result,"test.json",true);
+            writeresult.writetojson(result,"test_badcase.json",true);
         }
 
         //要将问题输出为json文件
@@ -55,12 +55,12 @@ public class BaidujingyanAtricleAnalyse {
         //System.out.println(doc.select("video[class='jw-video jw-reset']").toString());
 
         String url=filename.replace("baiduJingyanData\\article\\",
-                "https://jingyan.baidu.com/article/");
+                "https://jingyan.baidu.com/article/").replaceAll("&nbsp|;&gt;", "");
         result.put("url",url);
 
         try{
             String title = doc.title()
-                    .replace("_百度经验", "");
+                    .replace("_百度经验", "").replaceAll("&nbsp|;&gt;", "");
             result.put("title",title);
         }
         catch (Throwable e){
@@ -104,10 +104,13 @@ public class BaidujingyanAtricleAnalyse {
 //        只有video的id，无连接
         try{
             String summary=doc.select("div[class='content-listblock-text']")
-                    .toString()
-                    .replace("</p>","\\n")
+                    .toString().trim()
+                    .replace("</p>","\u0001|").replaceAll("&nbsp|;&gt;", "")
                     .replaceAll("<.*?>","")
-                    .replaceAll("\\s*","");
+                    .replace("&nbsp","")
+                    .trim()
+                    .replace("\n","\u0001|");
+
             result.put("summary",summary);
         }
         catch (Throwable e){
@@ -158,14 +161,14 @@ public class BaidujingyanAtricleAnalyse {
 
         while (matcher.find()) {
             String m = matcher.group();
-            path = path.replace(matcher.group(), ">");
+            path = path.replaceAll("&nbsp|;&gt;", "").replace(matcher.group(), ">").replace(";>",">");
         }
 
         path = path.trim().replaceAll("\\s*", "")
                 .replaceAll("百度经验", "")
-                .replaceAll("&nbsp;&gt;&nbsp;", "")
+                .replaceAll("&nbsp|;&gt;", "")
                 .replaceAll(">>", "")
-                .replaceAll("\r", "");
+                .replaceAll("\r", "").replaceAll("&nbsp|;&gt;", "");
 
         if (path.substring(path.length() - 1).equals(">")) {
             path = path.substring(0, path.length() - 1);
@@ -174,7 +177,7 @@ public class BaidujingyanAtricleAnalyse {
         if (path.substring(0, 1).equals(">")) {
             path = path.substring(1, path.length());
         }
-
+        path=path.replace(";","").replace(">>",">");
         return path;
     }
 
@@ -190,19 +193,19 @@ public class BaidujingyanAtricleAnalyse {
         for(Element module:modules){
             Map<String,Object> content=new HashMap<>();
 
-            String head=module.select("h2[class='exp-content-head']").text();
+            //String head=module.select("h2[class='exp-content-head']").text();
+            String head="";
+            if(module.select("h2[class='exp-content-head']").size()!=0){
+                head=module.select("h2[class='exp-content-head']").text();
+                content.put("head",head);
+            }
 
-//            if(head.equals("")){
-//                continue;
-//            }
-
-            content.put("head",head);
 
 
             Elements elements=module.select("li");
 
             List<Map<String,Object>> steps=new LinkedList<>();
-            if (head.equals("")){
+            if (!head.equals("")){
 //            if (elements.size()!=0){
 
                 for(Element element :elements) {
@@ -210,14 +213,18 @@ public class BaidujingyanAtricleAnalyse {
                     Map<String,Object> step=new HashMap<>();
 
                     String order=element.attr("class")
-                            .replace("exp-content-list list-item-","");
+                            .replace("exp-content-list list-item-","")
+                            .replaceAll("&nbsp|;&gt;", "");
                     String text;
                     try{
                         text=element.select("div[class='content-list-text']")
-                                .toString()
-                                .replaceAll("\\s*","")
-                                .replaceAll("<br>|</p>","\\n")
-                                .replaceAll("步骤阅读|<.*?>","");
+                                .toString().trim()
+                                .replace("<br>|</p>","\u0001|")
+                                .replaceAll("步骤阅读|<.*?>","")
+                                .replace("&nbsp","")
+                                .replaceAll("&nbsp|;&gt;", "")
+                                .trim()
+                                .replace("\n","\u0001|");
                     }
                     catch (NullPointerException e){
                         text="";
@@ -253,9 +260,13 @@ public class BaidujingyanAtricleAnalyse {
                         try{
                             text=element.select("div[class='content-listblock-text']")
                                     .toString()
-                                    .replaceAll("\\s*","")
-                                    .replaceAll("<br>|</p>","\\n")
-                                    .replaceAll("步骤阅读|<.*?>","");
+                                    .trim()
+                                    .replace("<br>|</p>","\u0001|")
+                                    .replaceAll("步骤阅读|<.*?>","")
+                                    .replace("&nbsp","")
+                                    .replaceAll("&nbsp|;&gt;", "")
+                                    .trim()
+                                    .replace("\n","\u0001|");
                         }
                         catch (NullPointerException e){
                             text="";
@@ -304,20 +315,20 @@ public class BaidujingyanAtricleAnalyse {
 
         String x=String.format("!function\\(\\).*videoList:\\[(\\{\"feedVid\":\"%s.*?}).*?\\].*function\\(\\)",Vid);
         Pattern p=Pattern.compile(x);
-        Matcher m = p.matcher(doc.toString().replaceAll("\\s*", ""));
+        Matcher m = p.matcher(doc.toString().replaceAll("\\s*", "").replaceAll("&nbsp|;&gt;", ""));
         while (m.find()) {
             System.out.println(m.group(1));
             String map = m.group(1);
             for (String i : map.split(",")) {
                 if (i.startsWith("\"playUrl\"")) {
-                    String videoSrc = i.replace("\"playUrl\":\"", "");
+                    String videoSrc = i.replace("\"playUrl\":\"", "").replaceAll("&nbsp|;&gt;", "");
 //                            .replace("\"", "")
 //                            .replace("\\", "");
                     video.put("VideoSrc", videoSrc);
                 }
                 if (i.startsWith("\"videoView\"")) {
                     String views = i.replace("\"videoView\":", "")
-                            .replace("}", "");
+                            .replace("}", "").replaceAll("&nbsp|;&gt;", "");
                     video.put("views", views);
                 }
             }
